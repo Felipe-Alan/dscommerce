@@ -3,6 +3,7 @@ package com.alandev.dscommerceproject.services;
 import com.alandev.dscommerceproject.dto.ProductDTO;
 import com.alandev.dscommerceproject.entities.Product;
 import com.alandev.dscommerceproject.repositories.ProductRepository;
+import com.alandev.dscommerceproject.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Product product = repository.findById(id).get();
+        Product product = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Resource not found"));
         return new ProductDTO(product);
     }
 
@@ -43,7 +45,7 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         Product entity = repository.getReferenceById(id);
-        BeanUtils.copyProperties(dto, entity,"id");
+        BeanUtils.copyProperties(dto, entity, "id");
         entity = repository.save(entity);
         return new ProductDTO(entity);
     }

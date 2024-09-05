@@ -34,16 +34,23 @@ public class ProductService {
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
-        BeanUtils.copyProperties(dto, entity, "id");
+        BeanUtils.copyProperties(dto, entity);
+        entity = repository.save(entity);
         return new ProductDTO(entity);
+
     }
 
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         Product entity = repository.getReferenceById(id);
-        BeanUtils.copyProperties(dto, entity, "id");
+        BeanUtils.copyProperties(dto, entity,"id");
         entity = repository.save(entity);
         return new ProductDTO(entity);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 
     private void copyDtoToEntity(ProductDTO dto, Product entity) {

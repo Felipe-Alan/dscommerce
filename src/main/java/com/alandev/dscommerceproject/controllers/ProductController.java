@@ -26,8 +26,9 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable) {
-        Page<ProductDTO> dtos = service.findAll(pageable);
+    public ResponseEntity<Page<ProductDTO>> findAll(@RequestParam(name = "name", defaultValue = "")
+                                                    String name, Pageable pageable) {
+        Page<ProductDTO> dtos = service.findAll(name, pageable);
         return ResponseEntity.ok(dtos);
     }
 
@@ -41,7 +42,7 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id,@Valid @RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }

@@ -1,7 +1,9 @@
 package com.alandev.dscommerceproject.services;
 
+import com.alandev.dscommerceproject.dto.CategoryDTO;
 import com.alandev.dscommerceproject.dto.ProductDTO;
 import com.alandev.dscommerceproject.dto.ProductMinDTO;
+import com.alandev.dscommerceproject.entities.Category;
 import com.alandev.dscommerceproject.entities.Product;
 import com.alandev.dscommerceproject.repositories.ProductRepository;
 import com.alandev.dscommerceproject.services.exceptions.DatabaseException;
@@ -79,5 +81,13 @@ public class ProductService {
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());
+
+        entity.getCategories().clear();
+        for (CategoryDTO categoryDTO : dto.getCategories()) {
+            Category category = new Category();
+            category.setName(categoryDTO.getName());
+            category.setId(categoryDTO.getId());
+            entity.getCategories().add(category);
+        }
     }
 }

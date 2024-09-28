@@ -3,6 +3,7 @@ package com.alandev.dscommerceproject.dto;
 import com.alandev.dscommerceproject.entities.Order;
 import com.alandev.dscommerceproject.entities.OrderItem;
 import com.alandev.dscommerceproject.entities.OrderStatus;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ public class OrderDTO {
 
     private PaymentDTO payment;
 
-    private List<OrderItemDTO> orderItems = new ArrayList<OrderItemDTO>();
+    @NotEmpty(message = "Deve conter pelo menos um item")
+    private List<OrderItemDTO> items = new ArrayList<OrderItemDTO>();
 
     public OrderDTO(Long id, Instant moment, OrderStatus status, ClientDTO client, PaymentDTO payment) {
         this.id = id;
@@ -35,7 +37,7 @@ public class OrderDTO {
         client = new ClientDTO(entity.getClient());
         payment = (entity.getPayment() == null) ? null : new PaymentDTO(entity.getPayment());
         for (OrderItem item : entity.getItems()){
-            orderItems.add(new OrderItemDTO(item));
+            items.add(new OrderItemDTO(item));
         }
     }
 
@@ -59,13 +61,13 @@ public class OrderDTO {
         return payment;
     }
 
-    public List<OrderItemDTO> getOrderItems() {
-        return orderItems;
+    public List<OrderItemDTO> getItems() {
+        return items;
     }
 
     public Double getTotal() {
         Double total = 0.0;
-        for (OrderItemDTO item : orderItems) {
+        for (OrderItemDTO item : items) {
             total += item.getSubTotal();
         }
         return total;

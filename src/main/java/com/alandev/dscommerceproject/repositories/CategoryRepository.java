@@ -1,0 +1,7 @@
+package com.alandev.dscommerceproject.repositories;
+
+import com.alandev.dscommerceproject.entities.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+}

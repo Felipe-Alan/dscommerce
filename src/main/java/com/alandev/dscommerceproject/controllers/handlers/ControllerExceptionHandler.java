@@ -3,6 +3,7 @@ package com.alandev.dscommerceproject.controllers.handlers;
 import com.alandev.dscommerceproject.dto.CustomError;
 import com.alandev.dscommerceproject.dto.ValidationError;
 import com.alandev.dscommerceproject.services.exceptions.DatabaseException;
+import com.alandev.dscommerceproject.services.exceptions.ForbiddenException;
 import com.alandev.dscommerceproject.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,13 @@ public class ControllerExceptionHandler {
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
             err.addErrors(fieldError.getField(), fieldError.getDefaultMessage());
         }
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<CustomError> handleForbidden(ForbiddenException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 }
